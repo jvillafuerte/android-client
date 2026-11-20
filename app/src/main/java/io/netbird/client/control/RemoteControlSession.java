@@ -15,10 +15,10 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.List;
-import java.util.Objects;
 
 import io.netbird.client.tool.Profile;
 import io.netbird.client.tool.ProfileManagerWrapper;
+import io.netbird.client.tool.RemoteStateBroadcast;
 import io.netbird.client.tool.ServiceStateListener;
 import io.netbird.client.tool.VPNService;
 import io.netbird.gomobile.android.Android;
@@ -45,7 +45,6 @@ final class RemoteControlSession implements ServiceConnection {
 
     private final Context context;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
-    private final Object stateLock = new Object();
     private final ArrayDeque<Command> queue = new ArrayDeque<>();
 
     private VPNService.MyLocalBinder binder;
@@ -53,8 +52,6 @@ final class RemoteControlSession implements ServiceConnection {
     private boolean binding;
     private boolean listenersRegistered;
     private String pendingProfileSwitch;
-    private RemoteState lastState;
-    private String lastMessage;
     // The engine emits a Connecting event while tearing the tunnel down; a
     // caller that asked to disconnect must not see DISCONNECTING, CONNECTING,
     // DISCONNECTED.
@@ -278,12 +275,14 @@ final class RemoteControlSession implements ServiceConnection {
 
     private void beginConnect() {
         connecting = true;
+        RemoteStateBroadcast.beginConnect();
         mainHandler.removeCallbacks(connectTimeout);
         mainHandler.postDelayed(connectTimeout, CONNECT_TIMEOUT_MS);
     }
 
     private void endConnect() {
         connecting = false;
+        RemoteStateBroadcast.endConnect();
         mainHandler.removeCallbacks(connectTimeout);
     }
 
@@ -437,27 +436,7 @@ final class RemoteControlSession implements ServiceConnection {
      * guarded; sendBroadcast itself is thread-safe.
      */
     private void publish(RemoteState state, @Nullable String message, boolean force) {
-        // A connect in flight owns the answer until it succeeds or fails; the
-        // service emits a Disconnected edge while it is being created and the
-        // old run tears down, and neither means the command was refused.
-        if (state == RemoteState.DISCONNECTED && connecting) {
-            return;
-        }
-        synchronized (stateLock) {
-            if (!force && state == lastState && Objects.equals(message, lastMessage)) {
-                return;
-            }
-            lastState = state;
-            lastMessage = message;
-        }
-        Intent intent = new Intent(RemoteControl.ACTION_STATE_CHANGED);
-        intent.putExtra(RemoteControl.EXTRA_STATE, state.wireName());
-        if (message != null) {
-            intent.putExtra(RemoteControl.EXTRA_MESSAGE, message);
-        }
-        context.sendBroadcast(intent, RemoteControl.permission(context));
-        Log.i(TAG, "state=" + state.wireName()
-                + (message != null ? " message=" + message : ""));
+        RemoteStateBroadcast.publish(context, state.wireName(), message, force);
     }
 
     private final ServiceStateListener serviceStateListener = new ServiceStateListener() {
