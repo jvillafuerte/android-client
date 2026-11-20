@@ -7,6 +7,17 @@
         android:protectionLevel="signature" />
 
     <!--
+        Held by apps the user wants to drive NetBird from, such as a TV
+        launcher. Dangerous, so it is granted explicitly; nothing here is
+        exposed without it.
+    -->
+    <permission
+        android:name="${applicationId}.permission.CONTROL_VPN"
+        android:description="@string/permission_control_vpn_description"
+        android:label="@string/permission_control_vpn_label"
+        android:protectionLevel="dangerous" />
+
+    <!--
         Split tunnelling needs to show the user a list of apps. Resolving the
         launcher intent keeps that to apps with an icon, which avoids
         QUERY_ALL_PACKAGES and the Play declaration it drags along.
@@ -83,6 +94,25 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
+
+        <!--
+            Remote control entry point. Exported because the callers are other
+            apps; android:permission is the gate, so only an app holding the
+            control permission can reach it. Senders should address this app
+            with setPackage() or the component, since a bare implicit broadcast
+            is not delivered to manifest receivers on Android 8+.
+        -->
+        <receiver
+            android:name=".control.RemoteControlReceiver"
+            android:exported="true"
+            android:permission="${applicationId}.permission.CONTROL_VPN">
+            <intent-filter>
+                <action android:name="io.netbird.client.action.CONNECT" />
+                <action android:name="io.netbird.client.action.DISCONNECT" />
+                <action android:name="io.netbird.client.action.TOGGLE" />
+                <action android:name="io.netbird.client.action.GET_STATE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

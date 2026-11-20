@@ -325,4 +325,8 @@
     <string name="mdm_managed_setting_keys">Ezt a beállítást a szervezete kezeli, ezért nem módosítható. (%s)</string>
     <string name="mdm_routes_managed">A hálózati útvonalakat a szervezete kezeli</string>
     <string name="mdm_policy_applied">A NetBird beállításait az informatikai szabályzat frissítette.</string>
+    <string name="settings_allow_remote_control">Távoli vezérlő alkalmazások engedélyezése</string>
+    <string name="settings_allow_remote_control_summary">A vezérlési engedéllyel rendelkező alkalmazások NetBird megnyitása nélkül csatlakozhatnak és bontathatják a kapcsolatot</string>
+    <string name="permission_control_vpn_label">NetBird vezérlése</string>
+    <string name="permission_control_vpn_description">NetBird csatlakoztatása és leválasztása</string>
 </resources>

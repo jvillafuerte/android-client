@@ -326,4 +326,8 @@
     <string name="mdm_managed_setting_keys">この設定は組織によって管理されているため、変更できません。(%s)</string>
     <string name="mdm_routes_managed">ネットワークルートは組織によって管理されています</string>
     <string name="mdm_policy_applied">NetBird の設定が IT ポリシーによって更新されました。</string>
+    <string name="settings_allow_remote_control">リモートコントロールアプリを許可</string>
+    <string name="settings_allow_remote_control_summary">制御権限を付与したアプリは、NetBird を開かずに接続・切断できます</string>
+    <string name="permission_control_vpn_label">NetBird の制御</string>
+    <string name="permission_control_vpn_description">NetBird の接続と切断</string>
 </resources>
