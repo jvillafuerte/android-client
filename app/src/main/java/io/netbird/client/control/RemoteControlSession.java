@@ -63,12 +63,34 @@ final class RemoteControlSession implements ServiceConnection {
     // its way out, and that edge must not erase the error before onStopped.
     @Nullable
     private String lastError;
+    // True once this session has seen the engine start. Registering a service
+    // state listener replays the current state, and that initial "stopped" is
+    // not a stop: handling it would report DISCONNECTED on a GET_STATE or on
+    // a command that never started anything.
+    private volatile boolean sawStart;
+    // A CONNECT is on its way up. The service reports Disconnected once while
+    // it is being created and again as a run tears down; neither is a real
+    // answer to the command until the run succeeds or fails.
+    private volatile boolean connecting;
+    private static final long CONNECT_TIMEOUT_MS = 20_000;
 
     private final Runnable bindTimeout = () -> {
         if (binding) {
             binding = false;
             fail("timed out binding to the VPN service");
         }
+    };
+
+    private final Runnable connectTimeout = () -> {
+        if (!connecting) {
+            return;
+        }
+        if (binder != null && binder.isRunning()) {
+            return;
+        }
+        connecting = false;
+        publish(RemoteState.ERROR,
+                "connection attempt ended before the tunnel came up", true);
     };
 
     static synchronized RemoteControlSession get(Context context) {
@@ -235,6 +257,7 @@ final class RemoteControlSession implements ServiceConnection {
                 // first and continue from onEngineStopped.
                 pendingProfileSwitch = target.getID();
                 publish(RemoteState.CONNECTING, null, true);
+                beginConnect();
                 binder.stopEngine();
                 return;
             }
@@ -249,7 +272,19 @@ final class RemoteControlSession implements ServiceConnection {
             return;
         }
 
+        beginConnect();
         startEngine();
+    }
+
+    private void beginConnect() {
+        connecting = true;
+        mainHandler.removeCallbacks(connectTimeout);
+        mainHandler.postDelayed(connectTimeout, CONNECT_TIMEOUT_MS);
+    }
+
+    private void endConnect() {
+        connecting = false;
+        mainHandler.removeCallbacks(connectTimeout);
     }
 
     private boolean switchProfile(Profile target) {
@@ -304,6 +339,7 @@ final class RemoteControlSession implements ServiceConnection {
     }
 
     private void disconnect() {
+        endConnect();
         // Emit the transition even when the engine is already down: callers
         // are promised DISCONNECTING followed by DISCONNECTED, including for
         // the cold case where the process (and the tunnel) was gone.
@@ -401,6 +437,12 @@ final class RemoteControlSession implements ServiceConnection {
      * guarded; sendBroadcast itself is thread-safe.
      */
     private void publish(RemoteState state, @Nullable String message, boolean force) {
+        // A connect in flight owns the answer until it succeeds or fails; the
+        // service emits a Disconnected edge while it is being created and the
+        // old run tears down, and neither means the command was refused.
+        if (state == RemoteState.DISCONNECTED && connecting) {
+            return;
+        }
         synchronized (stateLock) {
             if (!force && state == lastState && Objects.equals(message, lastMessage)) {
                 return;
@@ -421,6 +463,7 @@ final class RemoteControlSession implements ServiceConnection {
     private final ServiceStateListener serviceStateListener = new ServiceStateListener() {
         @Override
         public void onStarted() {
+            sawStart = true;
             mainHandler.post(() -> {
                 lastError = null;
                 if (!disconnecting) {
@@ -431,7 +474,9 @@ final class RemoteControlSession implements ServiceConnection {
 
         @Override
         public void onStopped() {
-            mainHandler.post(RemoteControlSession.this::onEngineStopped);
+            boolean wasRunning = sawStart;
+            sawStart = false;
+            mainHandler.post(() -> onEngineStopped(wasRunning));
         }
 
         @Override
@@ -440,6 +485,7 @@ final class RemoteControlSession implements ServiceConnection {
             // a generic engine failure: report what the caller can act on,
             // and leave the browser to the user opening NetBird themselves.
             mainHandler.post(() -> {
+                endConnect();
                 if (currentState() == RemoteState.NEEDS_LOGIN) {
                     lastError = null;
                     publish(RemoteState.NEEDS_LOGIN, null, true);
@@ -451,9 +497,16 @@ final class RemoteControlSession implements ServiceConnection {
         }
     };
 
-    private void onEngineStopped() {
+    private void onEngineStopped(boolean wasRunning) {
         boolean userAskedToStop = disconnecting;
         disconnecting = false;
+        if (!wasRunning) {
+            // The replay from registering the listener, not a stop. A command
+            // that is still binding or answering must not be overwritten by
+            // the state the service happened to be in before it arrived.
+            unbindIfIdle();
+            return;
+        }
         String switchTo = pendingProfileSwitch;
         if (switchTo != null && binder != null) {
             pendingProfileSwitch = null;
@@ -479,17 +532,23 @@ final class RemoteControlSession implements ServiceConnection {
      */
     private void publishEngineOutcome(boolean userAskedToStop) {
         if (userAskedToStop) {
+            endConnect();
             publish(RemoteState.DISCONNECTED, null, false);
             return;
         }
         if (binder != null && binder.isLoginRequired()) {
+            endConnect();
             lastError = null;
             publish(RemoteState.NEEDS_LOGIN, null, false);
         } else if (lastError != null) {
+            endConnect();
             publish(RemoteState.ERROR, lastError, false);
-        } else {
+        } else if (!connecting) {
             publish(RemoteState.DISCONNECTED, null, false);
         }
+        // While a connect is in flight, an engine stop without an error is one
+        // of the transient edges from startup; the run's own outcome (or the
+        // connect timeout) reports the end.
     }
 
     private final ConnectionListener connectionObserver = new ConnectionListener() {
@@ -511,6 +570,7 @@ final class RemoteControlSession implements ServiceConnection {
         @Override
         public void onConnected() {
             disconnecting = false;
+            endConnect();
             publish(RemoteState.CONNECTED, null, false);
         }
 
