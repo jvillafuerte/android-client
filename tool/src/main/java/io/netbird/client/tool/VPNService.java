@@ -315,6 +315,23 @@ public class VPNService extends android.net.VpnService {
             engineRunner.run(urlOpener, isAndroidTV);
         }
 
+        /**
+         * Starts the engine without an interactive login, the way the
+         * always-on start does. Remote control uses this so a logged-out user
+         * is reported as needing to sign in instead of being shown a browser.
+         */
+        public void runEngineWithoutAuth() {
+            fgNotification.setState(ForegroundNotification.State.CONNECTING);
+            fgNotification.startForeground();
+            sessionNotification.cancelExpired();
+            engineRunner.runWithoutAuth();
+        }
+
+        /** The run loop's status label, e.g. "Connected" or "NeedsLogin". */
+        public String status() {
+            return engineRunner.status();
+        }
+
         public void stopEngine() {
             engineRunner.stop();
         }
@@ -348,6 +365,20 @@ public class VPNService extends android.net.VpnService {
 
         public void removeConnectionStateListener() {
             engineRunner.removeStatusListener();
+        }
+
+        /**
+         * Adds a service-owned observer of the tunnel's connection phase.
+         * Unlike {@link #setConnectionStateListener} this does not take the
+         * listener away from a bound UI, so remote control can follow the
+         * engine while the app is in the background.
+         */
+        public void addConnectionObserver(ConnectionListener observer) {
+            engineRunner.addConnectionObserver(observer);
+        }
+
+        public void removeConnectionObserver(ConnectionListener observer) {
+            engineRunner.removeConnectionObserver(observer);
         }
 
         public void addServiceStateListener(ServiceStateListener serviceStateListener) {

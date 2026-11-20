@@ -72,12 +72,25 @@ public class ProfileManagerWrapper {
      * Stops the VPN service before switching
      */
     public void switchProfile(String id) throws Exception {
+        stopEngine();
+        switchToProfile(id);
+    }
+
+    /**
+     * Switches profiles without sending the stop broadcast, for callers that
+     * have already stopped the engine. The broadcast is asynchronous, so a
+     * caller that starts a new run right after would have it stopped by its
+     * own switch.
+     */
+    public void switchProfileWhileStopped(String id) throws Exception {
+        switchToProfile(id);
+    }
+
+    private void switchToProfile(String id) throws Exception {
         if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("ID cannot be empty");
         }
 
-        // Stop VPN service before switching profile
-        stopEngine();
         SessionWarningScheduler.cancelAll(context);
 
         profileManager.switchProfile(id);
