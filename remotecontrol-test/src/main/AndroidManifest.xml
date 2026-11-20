@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        The permission is defined by the NetBird build; this app requests it and
+        must be granted it explicitly:
+          adb shell pm grant io.netbird.client.controltest \
+              io.netbird.client.permission.CONTROL_VPN
+    -->
+    <uses-permission android:name="io.netbird.client.permission.CONTROL_VPN" />
+
+    <application
+        android:allowBackup="false"
+        android:label="NetBird remote test"
+        android:theme="@android:style/Theme.Material.Light">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Sends a command without this app's UI, so cold-start tests are
+             driven the way a launcher would: no sender activity on screen. -->
+        <receiver
+            android:name=".CommandReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="io.netbird.client.controltest.SEND" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>
