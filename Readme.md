@@ -349,14 +349,17 @@ adb shell pm grant com.gathin.tvhome io.netbird.client.permission.CONTROL_VPN
 
 `remotecontrol-test/` is a test-only sender module (`io.netbird.client.controltest`).
 It declares the control permission, sends every command and logs the states it
-receives. Grant it the permission, then drive it from adb:
+receives. Grant it the permission, launch it once (an app that has never been
+launched is in Android's stopped state, which drops the state broadcasts), then
+drive it from adb:
 
 ```shell
 adb shell pm grant io.netbird.client.controltest io.netbird.client.permission.CONTROL_VPN
+adb shell am start -n io.netbird.client.controltest/.MainActivity
 adb shell am broadcast -n io.netbird.client.controltest/.CommandReceiver \
     -a io.netbird.client.controltest.SEND \
     --es action io.netbird.client.action.CONNECT
-adb logcat -s NetBirdRemoteTest NetBirdRemoteControl
+adb logcat -s NetBirdRemoteTest NetBirdRemoteState
 ```
 
 The receiver path is used (rather than `am broadcast` straight to NetBird)
