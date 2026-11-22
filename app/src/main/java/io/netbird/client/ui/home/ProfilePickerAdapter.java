@@ -49,6 +49,7 @@ class ProfilePickerAdapter extends RecyclerView.Adapter<ProfilePickerAdapter.VH>
             holder.email.setVisibility(View.VISIBLE);
         }
 
+        holder.itemView.setSelected(profile.isActive());
         holder.check.setVisibility(profile.isActive() ? View.VISIBLE : View.INVISIBLE);
         holder.dot.setBackgroundResource(profile.isActive()
                 ? R.drawable.peer_status_connected

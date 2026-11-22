@@ -54,6 +54,7 @@ class ExitNodePickerAdapter extends RecyclerView.Adapter<ExitNodePickerAdapter.V
     public void onBindViewHolder(@NonNull VH holder, int position) {
         Entry entry = entries.get(position);
         holder.name.setText(entry.label);
+        holder.itemView.setSelected(entry.selected);
         holder.check.setVisibility(entry.selected ? View.VISIBLE : View.INVISIBLE);
         holder.itemView.setOnClickListener(v -> listener.onPick(entry));
     }

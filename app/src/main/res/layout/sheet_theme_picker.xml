@@ -29,7 +29,8 @@
         android:minHeight="56dp"
         android:orientation="horizontal"
         android:paddingStart="20dp"
-        android:paddingEnd="20dp">
+        android:paddingEnd="20dp"
+        android:foreground="@drawable/focus_highlight">
 
         <TextView
             android:layout_width="0dp"
@@ -46,7 +47,7 @@
             android:contentDescription="@null"
             android:src="@drawable/ic_check"
             android:visibility="invisible"
-            app:tint="@color/nb_orange" />
+            app:tint="@color/nb_orange_text" />
     </LinearLayout>
 
     <include layout="@layout/list_item_setting_divider" />
@@ -62,7 +63,8 @@
         android:minHeight="56dp"
         android:orientation="horizontal"
         android:paddingStart="20dp"
-        android:paddingEnd="20dp">
+        android:paddingEnd="20dp"
+        android:foreground="@drawable/focus_highlight">
 
         <TextView
             android:layout_width="0dp"
@@ -79,7 +81,7 @@
             android:contentDescription="@null"
             android:src="@drawable/ic_check"
             android:visibility="invisible"
-            app:tint="@color/nb_orange" />
+            app:tint="@color/nb_orange_text" />
     </LinearLayout>
 
     <include layout="@layout/list_item_setting_divider" />
@@ -95,7 +97,8 @@
         android:minHeight="56dp"
         android:orientation="horizontal"
         android:paddingStart="20dp"
-        android:paddingEnd="20dp">
+        android:paddingEnd="20dp"
+        android:foreground="@drawable/focus_highlight">
 
         <TextView
             android:layout_width="0dp"
@@ -112,7 +115,7 @@
             android:contentDescription="@null"
             android:src="@drawable/ic_check"
             android:visibility="invisible"
-            app:tint="@color/nb_orange" />
+            app:tint="@color/nb_orange_text" />
     </LinearLayout>
 
 </LinearLayout>

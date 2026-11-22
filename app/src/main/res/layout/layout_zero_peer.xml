@@ -30,5 +30,5 @@
         android:text="@string/zero_peers_btn_learn_why"
         android:textAllCaps="false"
         android:layout_marginTop="16dp"
-        android:textColor="@color/white" />
+        android:textColor="@color/nb_on_orange" />
 </LinearLayout>

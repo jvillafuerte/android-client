@@ -13,7 +13,8 @@
     android:paddingStart="20dp"
     android:paddingEnd="16dp"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="8dp"
+    android:foreground="@drawable/focus_highlight">
 
     <ImageView
         android:id="@+id/app_icon"

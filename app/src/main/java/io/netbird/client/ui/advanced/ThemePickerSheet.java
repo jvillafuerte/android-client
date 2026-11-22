@@ -14,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import io.netbird.client.databinding.SheetThemePickerBinding;
 
+import io.netbird.client.ui.BottomSheetExpander;
 public class ThemePickerSheet extends BottomSheetDialogFragment {
 
     public interface OnThemeChangedListener {
@@ -75,6 +76,12 @@ public class ThemePickerSheet extends BottomSheetDialogFragment {
             ((OnThemeChangedListener) getParentFragment()).onThemeChanged(mode);
         }
         dismiss();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        BottomSheetExpander.expand(this);
     }
 
     @Override

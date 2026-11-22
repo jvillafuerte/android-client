@@ -30,7 +30,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -82,7 +83,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -124,7 +126,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -163,7 +166,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -204,7 +208,8 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -259,7 +264,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -308,7 +314,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -350,7 +357,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -389,7 +397,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"

@@ -13,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import io.netbird.client.databinding.SheetSplitTunnelModeBinding;
 import io.netbird.client.tool.SplitTunnelConfig;
 
+import io.netbird.client.ui.BottomSheetExpander;
 public class SplitTunnelModeSheet extends BottomSheetDialogFragment {
 
     public interface OnModeChangedListener {
@@ -61,6 +62,10 @@ public class SplitTunnelModeSheet extends BottomSheetDialogFragment {
         binding.modeCheckOff.setVisibility(mode == SplitTunnelConfig.Mode.OFF ? View.VISIBLE : View.INVISIBLE);
         binding.modeCheckExclude.setVisibility(mode == SplitTunnelConfig.Mode.EXCLUDE ? View.VISIBLE : View.INVISIBLE);
         binding.modeCheckInclude.setVisibility(mode == SplitTunnelConfig.Mode.INCLUDE ? View.VISIBLE : View.INVISIBLE);
+        // Drives the selected-row background in sheet_row_bg, not just the check.
+        binding.modeRowOff.setSelected(mode == SplitTunnelConfig.Mode.OFF);
+        binding.modeRowExclude.setSelected(mode == SplitTunnelConfig.Mode.EXCLUDE);
+        binding.modeRowInclude.setSelected(mode == SplitTunnelConfig.Mode.INCLUDE);
     }
 
     private void pick(SplitTunnelConfig.Mode mode) {
@@ -68,6 +73,12 @@ public class SplitTunnelModeSheet extends BottomSheetDialogFragment {
             ((OnModeChangedListener) getParentFragment()).onModeChanged(mode);
         }
         dismiss();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        BottomSheetExpander.expand(this);
     }
 
     @Override

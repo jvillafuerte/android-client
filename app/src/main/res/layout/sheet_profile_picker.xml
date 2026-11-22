@@ -49,7 +49,8 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        android:foreground="@drawable/focus_highlight">
 
         <TextView
             android:id="@+id/profile_picker_show_all_text"
@@ -87,14 +88,15 @@
         android:minHeight="56dp"
         android:orientation="horizontal"
         android:paddingStart="20dp"
-        android:paddingEnd="20dp">
+        android:paddingEnd="20dp"
+        android:foreground="@drawable/focus_highlight">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_add"
-            app:tint="@color/nb_orange" />
+            app:tint="@color/nb_orange_text" />
 
         <TextView
             android:layout_width="0dp"
@@ -117,14 +119,15 @@
         android:minHeight="56dp"
         android:orientation="horizontal"
         android:paddingStart="20dp"
-        android:paddingEnd="20dp">
+        android:paddingEnd="20dp"
+        android:foreground="@drawable/focus_highlight">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_menu_profile"
-            app:tint="@color/nb_orange" />
+            app:tint="@color/nb_orange_text" />
 
         <TextView
             android:layout_width="0dp"

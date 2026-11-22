@@ -19,6 +19,7 @@ import io.netbird.client.R;
 import io.netbird.client.databinding.ListItemLanguageBinding;
 import io.netbird.client.databinding.SheetLanguagePickerBinding;
 
+import io.netbird.client.ui.BottomSheetExpander;
 public class LanguagePickerSheet extends BottomSheetDialogFragment {
 
     // Same languages as the desktop app (client/ui/i18n/locales/_index.json),
@@ -115,4 +116,11 @@ public class LanguagePickerSheet extends BottomSheetDialogFragment {
         Locale locale = current.get(0);
         return locale == null ? context.getString(R.string.language_system_default) : locale.getDisplayName(locale);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        BottomSheetExpander.expand(this);
+    }
+
 }
