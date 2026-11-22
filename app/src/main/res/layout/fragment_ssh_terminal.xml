@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ssh_session_reconnect"
-            android:textColor="@color/nb_orange" />
+            android:textColor="@color/nb_orange_text" />
     </LinearLayout>
 
     <HorizontalScrollView

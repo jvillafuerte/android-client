@@ -1,9 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="?android:attr/colorControlHighlight">
-    <item android:id="@android:id/mask">
-        <shape android:shape="rectangle">
-            <solid android:color="#FFFFFFFF" />
-        </shape>
+<!-- Row background for bottom sheets and pickers. The selected state was
+     previously the same surface as every other row (rows call setSelected(),
+     but a plain ripple ignored it). It is now a warm tint with a leading
+     accent bar, in addition to the checkmark. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <ripple android:color="?android:attr/colorControlHighlight">
+            <item android:id="@android:id/mask">
+                <shape android:shape="rectangle">
+                    <solid android:color="#FFFFFFFF" />
+                </shape>
+            </item>
+            <item>
+                <layer-list>
+                    <item>
+                        <shape android:shape="rectangle">
+                            <solid android:color="@color/nb_selected_bg" />
+                            <stroke
+                                android:width="2dp"
+                                android:color="@color/nb_selected_stroke" />
+                        </shape>
+                    </item>
+                    <item
+                        android:width="6dp"
+                        android:gravity="start">
+                        <shape android:shape="rectangle">
+                            <solid android:color="@color/nb_selected_stroke" />
+                        </shape>
+                    </item>
+                </layer-list>
+            </item>
+        </ripple>
     </item>
-</ripple>
+
+    <item>
+        <ripple android:color="?android:attr/colorControlHighlight">
+            <item android:id="@android:id/mask">
+                <shape android:shape="rectangle">
+                    <solid android:color="#FFFFFFFF" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/nb_sheet_bg" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+</selector>

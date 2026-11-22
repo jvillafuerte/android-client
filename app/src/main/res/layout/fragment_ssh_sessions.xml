@@ -36,7 +36,7 @@
         android:contentDescription="@string/ssh_new_connection_title"
         android:src="@drawable/add_24px"
         app:backgroundTint="@color/nb_orange"
-        app:tint="@android:color/white"
+        app:tint="@color/nb_on_orange"
         app:elevation="0dp"
         app:hoveredFocusedTranslationZ="0dp"
         app:pressedTranslationZ="0dp" />

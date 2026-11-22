@@ -13,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import io.netbird.client.databinding.SheetAnonymizeLevelBinding;
 import io.netbird.client.tool.Preferences;
 
+import io.netbird.client.ui.BottomSheetExpander;
 public class AnonymizeLevelSheet extends BottomSheetDialogFragment {
 
     public interface OnLevelChangedListener {
@@ -46,6 +47,12 @@ public class AnonymizeLevelSheet extends BottomSheetDialogFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        BottomSheetExpander.expand(this);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
@@ -60,13 +67,15 @@ public class AnonymizeLevelSheet extends BottomSheetDialogFragment {
     }
 
     private void showCheckmarkFor(String level) {
-        binding.levelCheckNone.setVisibility(
-                Preferences.ANONYMIZE_LEVEL_NONE.equals(level) ? View.VISIBLE : View.INVISIBLE);
-        binding.levelCheckStrict.setVisibility(
-                Preferences.ANONYMIZE_LEVEL_STRICT.equals(level) ? View.VISIBLE : View.INVISIBLE);
-        binding.levelCheckDefault.setVisibility(
-                Preferences.ANONYMIZE_LEVEL_NONE.equals(level) || Preferences.ANONYMIZE_LEVEL_STRICT.equals(level)
-                        ? View.INVISIBLE : View.VISIBLE);
+        boolean none = Preferences.ANONYMIZE_LEVEL_NONE.equals(level);
+        boolean strict = Preferences.ANONYMIZE_LEVEL_STRICT.equals(level);
+        binding.levelCheckNone.setVisibility(none ? View.VISIBLE : View.INVISIBLE);
+        binding.levelCheckStrict.setVisibility(strict ? View.VISIBLE : View.INVISIBLE);
+        binding.levelCheckDefault.setVisibility(none || strict ? View.INVISIBLE : View.VISIBLE);
+        // Drives the selected-row background in sheet_row_bg, not just the check.
+        binding.levelRowNone.setSelected(none);
+        binding.levelRowStrict.setSelected(strict);
+        binding.levelRowDefault.setSelected(!none && !strict);
     }
 
     private void pick(String level) {

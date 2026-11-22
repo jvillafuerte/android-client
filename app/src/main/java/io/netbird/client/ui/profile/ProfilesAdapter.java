@@ -80,6 +80,7 @@ public class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.Profil
             }
 
             badgeActive.setVisibility(profile.isActive() ? View.VISIBLE : View.GONE);
+            itemView.setSelected(profile.isActive());
 
             itemView.setOnClickListener(v -> {
                 if (!profile.isActive()) {

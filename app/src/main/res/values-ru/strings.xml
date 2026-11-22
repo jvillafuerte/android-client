@@ -334,4 +334,8 @@
     <string name="mdm_managed_setting_keys">Эта настройка управляется вашей организацией и не может быть изменена. (%s)</string>
     <string name="mdm_routes_managed">Сетевые маршруты управляются вашей организацией</string>
     <string name="mdm_policy_applied">Конфигурация NetBird обновлена ИТ-политикой.</string>
+    <string name="settings_allow_remote_control">Разрешить приложениям удалённое управление</string>
+    <string name="settings_allow_remote_control_summary">Приложения с разрешением управления могут подключать и отключать NetBird, не открывая его</string>
+    <string name="permission_control_vpn_label">управление NetBird</string>
+    <string name="permission_control_vpn_description">Подключение и отключение NetBird</string>
 </resources>

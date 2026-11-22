@@ -275,6 +275,11 @@ class EngineRunner {
         }
     }
 
+    /** Detaches an observer registered with {@link #addConnectionObserver}. */
+    public synchronized void removeConnectionObserver(ConnectionListener observer) {
+        connectionObservers.remove(observer);
+    }
+
     private static ConnectionListener unwrap(ConnectionListener listener) {
         ConnectionListener current = listener;
         while (current instanceof ObservingConnectionListener) {

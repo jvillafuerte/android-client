@@ -62,7 +62,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/fragment_firstinstall_androidtv_beta"
                 android:textAlignment="center"
-                android:textColor="@color/nb_orange"
+                android:textColor="@color/nb_orange_text"
                 android:textStyle="italic"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -93,7 +93,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:focusable="true">
+                        android:focusable="true"
+                        android:foreground="@drawable/focus_highlight">
 
                         <TextView
                             android:id="@+id/label_server_cloud"
@@ -113,7 +114,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:focusable="true">
+                        android:focusable="true"
+                        android:foreground="@drawable/focus_highlight">
 
                         <TextView
                             android:id="@+id/label_server_self_hosted"
@@ -155,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="@string/profiles_dialog_url_unreachable"
-                android:textColor="@color/nb_orange"
+                android:textColor="@color/nb_orange_text"
                 android:textSize="12sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -217,7 +219,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/change_server_setup_key_warning"
-                android:textColor="@color/nb_orange"
+                android:textColor="@color/nb_orange_text"
                 android:textSize="12sp"
                 android:visibility="gone"
                 tools:visibility="visible" />

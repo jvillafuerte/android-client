@@ -11,7 +11,8 @@
     android:minHeight="56dp"
     android:orientation="horizontal"
     android:paddingStart="20dp"
-    android:paddingEnd="20dp">
+    android:paddingEnd="20dp"
+    android:foreground="@drawable/focus_highlight">
 
     <View
         android:id="@+id/profile_picker_dot"
@@ -56,7 +57,7 @@
         android:contentDescription="@null"
         android:src="@drawable/ic_check"
         android:visibility="invisible"
-        app:tint="@color/nb_orange"
+        app:tint="@color/nb_orange_text"
         tools:visibility="visible" />
 
 </LinearLayout>

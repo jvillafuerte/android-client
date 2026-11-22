@@ -30,7 +30,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -82,7 +83,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -124,7 +126,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -163,7 +166,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -192,6 +196,64 @@
         <include layout="@layout/list_item_setting_divider" />
 
         <LinearLayout
+            android:id="@+id/row_remote_control"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/settings_row_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:minHeight="56dp"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_menu_remote_control"
+                app:tint="@color/nb_txt_light" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_allow_remote_control"
+                    android:textColor="@color/nb_txt"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/settings_allow_remote_control_summary"
+                    android:textColor="@color/nb_txt_light"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_remote_control"
+                style="@style/Widget.NetBird.Switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <include layout="@layout/list_item_setting_divider" />
+
+        <LinearLayout
             android:id="@+id/row_language"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -202,7 +264,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -251,7 +314,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -293,7 +357,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"
@@ -332,7 +397,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <ImageView
                 android:layout_width="24dp"

@@ -328,4 +328,8 @@
     <string name="mdm_managed_setting_keys">Esta configuración está gestionada por su organización y no se puede cambiar. (%s)</string>
     <string name="mdm_routes_managed">Las rutas de red están gestionadas por su organización</string>
     <string name="mdm_policy_applied">La configuración de NetBird se actualizó según su política de TI.</string>
+    <string name="settings_allow_remote_control">Permitir apps de control remoto</string>
+    <string name="settings_allow_remote_control_summary">Las apps a las que concedas el permiso de control pueden conectar y desconectar NetBird sin abrirlo</string>
+    <string name="permission_control_vpn_label">controlar NetBird</string>
+    <string name="permission_control_vpn_description">Conectar y desconectar NetBird</string>
 </resources>

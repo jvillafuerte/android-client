@@ -24,6 +24,12 @@
     <string name="settings_section_information">Information</string>
     <string name="settings_documentation">Documentation</string>
 
+    <!-- Remote control for launchers and other apps the user grants the permission. -->
+    <string name="settings_allow_remote_control">Allow remote control apps</string>
+    <string name="settings_allow_remote_control_summary">Apps you grant the control permission can connect and disconnect NetBird without opening it</string>
+    <string name="permission_control_vpn_label">control NetBird</string>
+    <string name="permission_control_vpn_description">Connect and disconnect NetBird</string>
+
     <string name="main_status_disconnected">Disconnected</string>
     <string name="main_status_connecting">Connecting…</string>
     <string name="main_status_no_network">No network available</string>

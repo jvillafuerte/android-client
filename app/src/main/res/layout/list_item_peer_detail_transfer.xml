@@ -58,7 +58,7 @@
             android:layout_marginStart="14dp"
             android:contentDescription="@string/peer_detail_bytes_sent"
             android:src="@drawable/ic_arrow_up_small"
-            app:tint="@color/nb_orange" />
+            app:tint="@color/nb_orange_text" />
 
         <TextView
             android:id="@+id/peer_detail_bytes_tx"

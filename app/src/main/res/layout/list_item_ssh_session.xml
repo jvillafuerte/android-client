@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    android:background="@color/nb_gray_bg"
-    android:foreground="?attr/selectableItemBackground"
+    android:background="@drawable/card_bg"
+    android:focusable="true"
+    android:foreground="@drawable/focus_highlight"
     android:padding="16dp">
 
     <!-- Spans the label block rather than the parent: a match_constraint height

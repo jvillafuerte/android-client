@@ -17,6 +17,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import io.netbird.client.R;
+import io.netbird.client.control.RemoteControlSettings;
 import io.netbird.client.databinding.FragmentSettingsBinding;
 import io.netbird.client.tool.MDMBridge;
 import io.netbird.client.tool.MDMRestrictions;
@@ -79,10 +80,25 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        configureRemoteControlSwitch();
         setVersionText();
 
         // After the listeners above: locking a row takes its listener away.
         applyMDMPolicy();
+    }
+
+    /**
+     * "Allow remote control apps" is off unless the user turns it on, and the
+     * control receiver answers DISABLED for as long as it stays off.
+     */
+    private void configureRemoteControlSwitch() {
+        binding.switchRemoteControl.setChecked(
+                RemoteControlSettings.isEnabled(requireContext()));
+        binding.switchRemoteControl.setOnCheckedChangeListener(
+                (buttonView, isChecked) ->
+                        RemoteControlSettings.setEnabled(requireContext(), isChecked));
+        binding.rowRemoteControl.setOnClickListener(
+                v -> binding.switchRemoteControl.toggle());
     }
 
     /**

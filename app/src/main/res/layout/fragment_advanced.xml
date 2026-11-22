@@ -85,7 +85,8 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -132,7 +133,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <TextView
                 android:layout_width="0dp"
@@ -170,7 +172,8 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -219,7 +222,8 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -268,7 +272,8 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -317,7 +322,8 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -366,7 +372,8 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -415,7 +422,8 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -464,7 +472,8 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -513,7 +522,8 @@
             android:paddingStart="20dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="10dp"
+            android:foreground="@drawable/focus_highlight">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -563,7 +573,8 @@
             android:minHeight="56dp"
             android:orientation="horizontal"
             android:paddingStart="20dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            android:foreground="@drawable/focus_highlight">
 
             <TextView
                 android:layout_width="0dp"

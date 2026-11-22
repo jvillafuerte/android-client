@@ -27,4 +27,6 @@ rootProject.name = "Netbird"
 include(":app")
 include(":gomobile")
 include(":tool")
+// Test-only sender for the remote control contract; not part of the app.
+include(":remotecontrol-test")
 

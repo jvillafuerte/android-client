@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Selected segment of the Cloud / Self-hosted control. The tinted surface
+     plus accent border makes the choice visible even when the labels are
+     similar in weight. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:radius="7dp" />
     <solid android:color="@color/nb_segment_thumb" />
+    <stroke
+        android:width="2dp"
+        android:color="@color/nb_selected_stroke" />
 </shape>

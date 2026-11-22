@@ -45,6 +45,119 @@ You can download and install the app from the Google Play Store:
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=io.netbird.client)
 
+## Remote control
+
+This fork adds an opt-in interface that lets another app on the device, such as
+a TV launcher, connect and disconnect NetBird without its UI appearing. The
+design follows the WireGuard Android client: a dangerous permission, an exported
+receiver, and an in-app setting that is off by default.
+
+### Install a self-signed build
+
+A build signed with a key other than NetBird's upload key cannot update the Play
+Store build in place. Uninstall the store app first:
+
+```shell
+adb uninstall io.netbird.client
+adb install app-release.apk
+```
+
+Uninstalling removes the app's data, so the profile and its login are gone.
+Open NetBird once and sign in again before relying on remote commands. Granting
+VPN consent in that first session is also what lets a later remote start bring
+the service up from the background (see below).
+
+### Permission
+
+`io.netbird.client.permission.CONTROL_VPN`, protection level `dangerous`. A
+control app declares it:
+
+```xml
+<uses-permission android:name="io.netbird.client.permission.CONTROL_VPN" />
+```
+
+and is granted it explicitly. Sideloaded builds do not show a runtime prompt, so
+grant it from adb:
+
+```shell
+adb shell pm grant com.gathin.tvhome io.netbird.client.permission.CONTROL_VPN
+```
+
+### Setting
+
+Settings → **Allow remote control apps**, off by default. While it is off every
+command is ignored and answered with `DISABLED`.
+
+### Commands
+
+Send these to `io.netbird.client`, addressed with
+`setPackage("io.netbird.client")` or the receiver component:
+
+| Action | Effect |
+| --- | --- |
+| `io.netbird.client.action.CONNECT` | Connect with the current profile. Optional string extra `profile` switches to that profile first (matched by id, then by name); an unknown profile is answered with `ERROR`. |
+| `io.netbird.client.action.DISCONNECT` | Disconnect. |
+| `io.netbird.client.action.TOGGLE` | Connect if down, disconnect if up. |
+| `io.netbird.client.action.GET_STATE` | Change nothing, report the state. |
+
+Add `Intent.FLAG_INCLUDE_STOPPED_PACKAGES` if the command must reach an install
+that has never been opened, or one that was force-stopped. Android otherwise
+holds broadcasts back from stopped packages.
+
+### State reports
+
+After every command and on every engine state change NetBird sends
+`io.netbird.client.action.STATE_CHANGED` with
+`sendBroadcast(intent, "io.netbird.client.permission.CONTROL_VPN")`, so only
+apps holding the permission receive it. Extras:
+
+* `state` (string): `CONNECTING`, `CONNECTED`, `DISCONNECTING`, `DISCONNECTED`,
+  `NEEDS_LOGIN`, `NEEDS_CONSENT`, `DISABLED`, or `ERROR`.
+* `message` (string, optional): detail for `ERROR`.
+
+Register the receiver at runtime:
+
+```java
+registerReceiver(receiver,
+        new IntentFilter("io.netbird.client.action.STATE_CHANGED"),
+        Context.RECEIVER_EXPORTED);
+```
+
+A receiver declared only in the manifest does not receive implicit broadcasts on
+Android 8 and later, so a manifest-only receiver will not see these reports.
+
+### Behaviour
+
+Remote commands never open an activity, a dialog, or a notification prompt. If
+VPN consent is missing the answer is `NEEDS_CONSENT`; if the profile has not
+signed in, `NEEDS_LOGIN`. In both cases nothing else happens and the caller is
+expected to open NetBird itself. Commands work with NetBird's process killed
+(including `adb shell am force-stop`) and while the device is idle.
+
+A background foreground-service start is what Android 12+ normally refuses. A
+VPN app the user has consented to holds the `OP_ACTIVATE_VPN` app-op, which the
+platform counts as an exemption (`REASON_OP_ACTIVATE_VPN` in
+`ActiveServices`), and NetBird starts the same way the quick settings tile does.
+Without VPN consent the start is not attempted at all: the command is answered
+with `NEEDS_CONSENT`.
+
+### Testing
+
+`remotecontrol-test/` is a small sender app. It declares the permission, sends
+the commands, and logs the replies it receives on the `NetBirdRemoteTest` tag.
+It can be driven without any UI:
+
+```shell
+adb shell pm grant io.netbird.client.controltest io.netbird.client.permission.CONTROL_VPN
+adb shell am broadcast -n io.netbird.client.controltest/.CommandReceiver \
+    -a io.netbird.client.controltest.SEND \
+    --es action io.netbird.client.action.CONNECT
+adb logcat -s NetBirdRemoteTest NetBirdRemoteControl
+```
+
+Unit tests cover the state mapping and the default-off setting:
+`./gradlew :app:testDebugUnitTest`.
+
 ## Reporting bugs and requesting features
 
 NetBird uses a discussion-first workflow across all its repositories. Bug reports and
@@ -103,3 +216,151 @@ cd ~/projects/android-client
 cd ~/projects/android-client/android
 ./gradlew bundleDebug  -PversionCode=123 -PversionName=1.2.3
 ```
+
+## Remote control (fork)
+
+This branch adds an opt-in remote-control API so another app on the same device
+(a TV launcher, an automation app) can connect and disconnect NetBird without
+opening NetBird's UI. It is modelled on the WireGuard Android client's
+`com.wireguard.android.permission.CONTROL_TUNNELS` receiver and its
+"Allow remote control apps" setting.
+
+### Contract
+
+The names below are the public surface. A caller codes against them, so do not
+rename them.
+
+**Permission**
+
+```xml
+<permission
+    android:name="io.netbird.client.permission.CONTROL_VPN"
+    android:protectionLevel="dangerous"
+    android:label="control NetBird"
+    android:description="Connect and disconnect NetBird" />
+```
+
+The controlling app declares it in its own manifest:
+
+```xml
+<uses-permission android:name="io.netbird.client.permission.CONTROL_VPN" />
+```
+
+It is a dangerous permission, so it is not granted at install. Grant it once,
+after both apps are installed:
+
+```shell
+adb shell pm grant com.example.launcher io.netbird.client.permission.CONTROL_VPN
+```
+
+**Enabling it**: NetBird → Settings → **Allow remote control apps**. It is off
+by default. While it is off, every command is ignored and answered with
+`DISABLED`.
+
+**Commands** are broadcasts to
+`io.netbird.client.control.RemoteControlReceiver` (exported; the manifest's
+`android:permission` keeps out apps without the control permission):
+
+| Action | Effect |
+| --- | --- |
+| `io.netbird.client.action.CONNECT` | Connect with the current profile. |
+| `io.netbird.client.action.DISCONNECT` | Disconnect. |
+| `io.netbird.client.action.TOGGLE` | Connect if down, disconnect if up. |
+| `io.netbird.client.action.GET_STATE` | Change nothing; report the state. |
+
+`CONNECT` accepts an optional string extra `profile` with a profile's name or
+ID; NetBird switches to it first if it exists. Address the broadcast to the
+package (`intent.setPackage("io.netbird.client")`); a bare implicit broadcast
+is not delivered to manifest receivers on Android 8 and later.
+
+**State reports**: after every command and on every engine state change,
+NetBird sends `io.netbird.client.action.STATE_CHANGED` with
+`sendBroadcast(intent, "io.netbird.client.permission.CONTROL_VPN")`, so only
+apps holding the permission receive it. The intent carries:
+
+- `state`: `CONNECTING`, `CONNECTED`, `DISCONNECTING`, `DISCONNECTED`,
+  `NEEDS_LOGIN`, `NEEDS_CONSENT`, `DISABLED` or `ERROR`;
+- `message`: optional human-readable detail, used with `ERROR`.
+
+**Behaviour**
+
+- No activity, dialog, browser or notification prompt is ever opened because
+  of a remote command.
+- If VPN consent is missing (`VpnService.prepare()` returns non-null), the
+  answer is `NEEDS_CONSENT` and nothing is started.
+- If the user is not logged in, the answer is `NEEDS_LOGIN` and nothing is
+  started. The caller opens NetBird itself when it wants to.
+- Commands work from a cold start (the broadcast starts the app's process) and
+  while the device has been idle.
+
+**From a launcher**
+
+```java
+Intent command = new Intent("io.netbird.client.action.CONNECT");
+command.setPackage("io.netbird.client");
+command.putExtra("profile", "default");          // optional
+sendBroadcast(command);
+
+// Replies:
+IntentFilter filter = new IntentFilter("io.netbird.client.action.STATE_CHANGED");
+registerReceiver(receiver, filter, "io.netbird.client.permission.CONTROL_VPN", null);
+```
+
+### Background starts on Android 12+
+
+A broadcast receiver runs with NetBird in the background, and Android 12 (API
+31) and later refuse a `startForegroundService()` from the background unless an
+exemption applies. The relevant exemption here is the VPN app-op: once the user
+has granted the VPN consent dialog, the package holds `OP_ACTIVATE_VPN`, which
+`ActiveServices` accepts as `REASON_OP_ACTIVATE_VPN`. This is the same mechanism
+that lets the WireGuard client bring a tunnel up from its receiver.
+
+The receiver checks `VpnService.prepare()` *before* it starts anything, so the
+first connect of a fresh install reports `NEEDS_CONSENT` and never attempts a
+background start. After consent, the service start is accepted; no try/catch
+masks a refusal. If consent has been revoked or an OEM blocks it, the start
+fails and the caller receives `ERROR` with a message, not a fake `CONNECTING`.
+
+This was verified on a Xiaomi Google TV (MiTV-MOEU0, Android 14 / API 34):
+with the NetBird process force-stopped, a `CONNECT` produced
+`CONNECTING → CONNECTED`, and `dumpsys activity services` reported
+`allowStartForeground=OP_ACTIVATE_VPN`, `uidState: RCVR` and
+`isForeground=true types=40000000` (`FOREGROUND_SERVICE_SPECIAL_USE`).
+
+### Installing this fork's build
+
+A self-signed build **cannot update the Play Store build in place**: Android
+requires an APK update to be signed with the same key as the installed one.
+Uninstall the store app first. That removes its data, so the user has to log in
+again afterwards.
+
+```shell
+adb uninstall io.netbird.client
+adb install app-release.apk
+# Launch NetBird once and log in (SSO, setup key or the self-hosted server),
+# then switch on Settings -> Allow remote control apps.
+adb shell pm grant com.gathin.tvhome io.netbird.client.permission.CONTROL_VPN
+```
+
+`pm grant` only works if the launcher already declares the
+`io.netbird.client.permission.CONTROL_VPN` `<uses-permission>` in its manifest.
+
+### Test app
+
+`remotecontrol-test/` is a test-only sender module (`io.netbird.client.controltest`).
+It declares the control permission, sends every command and logs the states it
+receives. Grant it the permission, launch it once (an app that has never been
+launched is in Android's stopped state, which drops the state broadcasts), then
+drive it from adb:
+
+```shell
+adb shell pm grant io.netbird.client.controltest io.netbird.client.permission.CONTROL_VPN
+adb shell am start -n io.netbird.client.controltest/.MainActivity
+adb shell am broadcast -n io.netbird.client.controltest/.CommandReceiver \
+    -a io.netbird.client.controltest.SEND \
+    --es action io.netbird.client.action.CONNECT
+adb logcat -s NetBirdRemoteTest NetBirdRemoteState
+```
+
+The receiver path is used (rather than `am broadcast` straight to NetBird)
+because the shell user cannot hold a custom dangerous permission.

@@ -30,6 +30,7 @@ import io.netbird.gomobile.android.NetworkArray;
  * through it; the engine deselects the previously active exit node, so at most
  * one is active at a time.
  */
+import io.netbird.client.ui.BottomSheetExpander;
 public class ExitNodePickerSheet extends BottomSheetDialogFragment {
 
     private static final String TAG = "ExitNodePickerSheet";
@@ -68,6 +69,12 @@ public class ExitNodePickerSheet extends BottomSheetDialogFragment {
         list.setAdapter(adapter);
 
         exitNodesLoader.request();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        BottomSheetExpander.expand(this);
     }
 
     @Override
